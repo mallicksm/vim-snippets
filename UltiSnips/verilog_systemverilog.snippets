@@ -1,0 +1,578 @@
+################################################################################
+# SV Design 2005
+################################################################################
+snippet always "always @ .."
+always @(posedge clk) begin
+	${1:<body>}
+end
+endsnippet
+snippet initial "initial .."
+initial begin
+	${1:<body>}
+end
+endsnippet
+snippet always_comb "always_comb .."
+always_comb begin
+	${1:<body>}
+end
+endsnippet
+snippet always_ff "always_ff .."
+always_ff @(${1:posedge clk or negedge reset_n})
+	${2:<body>}
+end
+endsnippet
+snippet always_latch "always_latch .."
+always_latch
+	${1:<body>}
+end
+endsnippet
+snippet case "case() .. "
+unique case(${1:expression})
+	${2:value1}: begin
+		${3:<body>}
+	end
+
+	// Unique to not synthesize priority encoder
+	// other case branches
+	// can have comma separated keys
+	// use casez for wildcard keys dont use casex
+
+	default: begin
+		${4:<body>}
+	end
+endcase
+endsnippet
+snippet while "while() .."
+while (${1:condition}) begin
+	${2:<body>}
+end
+endsnippet
+snippet for "for() .. "
+for(${1:int i = 0}; ${2:i != n}; ${3:++i}) begin
+	${4:<body>}
+end
+endsnippet
+snippet if "if() .. "
+if(${1:condition}) begin
+	${2:<body>}
+end
+endsnippet
+snippet if "if()else .. "
+if(${1:condition}) begin
+	${2:<if body>}
+end else begin
+	${3:<else body>}
+end
+endsnippet
+snippet foreach "foreach(x[i]) .."
+logic [7:0] ${1:two_dim}[10];
+foreach( $1[i,j] ) begin  // for single dimention, use int $1[10]
+	${2:<body>}
+end
+endsnippet
+snippet do "do .. while()"
+do begin
+	${2:<body>}
+end while(${1:<expr>});
+endsnippet
+snippet enum "enum .. { .. }"
+typedef enum ${3:<base_type>} {
+	${2:<item,item,item>}
+} ${1:enum_name};
+endsnippet
+snippet dynamic "dynamic"
+int mydynamic[] = new[10](oldarr);
+endsnippet
+snippet queue "queue"
+int myqueue[$] = '{item};
+endsnippet
+snippet hash "hash"
+string myhash [string];
+myhash = '{"soummmya":"mallick", "roshni":"mallick"};
+endsnippet
+snippet struct "struct ... { ... }"
+typedef struct {
+	${2:<member>};
+	${2:<member>};
+} ${1:struct_name};
+endsnippet
+snippet typedef "typedef .."
+typedef ${1:type} ${2:type_name};
+endsnippet
+snippet union "union ... { ... }"
+typedef union {
+	${2}
+} ${1:union_name};
+endsnippet
+snippet parameter "parameter .. "
+parameter ${1:param_name} = ${2:param_value};
+endsnippet
+snippet `define "`define syntax"
+'define DEBUG
+endsnippet
+snippet `include "include any file into verilog"
+`include "svdpi.h"
+endsnippet
+snippet `ifdef "block out code"
+`ifdef DEBUG
+	${1:<debug_code>}
+`else
+	${2:<code>}
+`endif
+endsnippet
+snippet generate "generate tool independent syntax"
+generate
+	genvar i;
+	for (i;i<10;i++) begin:generate_label
+	${1:<generate_body>}
+	end
+endgenerate
+endsnippet
+snippet assert ""
+assert (a != a) else $error("a = %d",a); // Prints user defined ERROR if False
+endsnippet
+snippet display "display .. write"
+$display("Hello %0x",1'b10); $write same w/o \n, $monitor w/ var changes
+endsnippet
+snippet sformatf ""
+$sformatf("var value = %s", var)
+endsnippet
+snippet timeformat ""
+$timeformat(${1:unit}, ${2:precision}, ${3:"ns"}, ${4:minwidth}); // -9, 2, " ns", 10
+endsnippet
+snippet import "import mypkg::8"
+import ${1:pkg_name}::*;
+endsnippet
+snippet timeunit "module scoped timescale"
+timeunit 1ns;
+timeprecision 1ps;
+endsnippet
+################################################################################
+# SV Verification
+################################################################################
+snippet final "final .."
+final begin
+	${1}
+end
+endsnippet
+snippet modport "modport .. { .. }"
+modport ${1:modport_name} (
+	input ${input_ports},
+	output ${output_ports},
+	// import tasks_functions,
+	// clocking clocking_blocks
+);
+endsnippet
+snippet fork "fork .. join"
+fork
+	begin
+		${1}
+	end
+	begin
+
+	end
+join
+endsnippet
+snippet fork "fork .. join_any"
+fork
+	begin
+		${1}
+	end
+	begin
+
+	end
+join_any
+endsnippet
+snippet fork "fork .. join_none"
+fork
+	begin
+		${1}
+	end
+	begin
+
+	end
+join_none
+endsnippet
+snippet once "`ifndef XXX; `define XXX; `endif"
+\`ifndef ${1:`toupper('_'.substitute(expand('%:t'), '\.', '_', '').'_')`}
+
+\`define $1
+
+${2}
+
+\`endif // Guard
+endsnippet
+snippet rand "rand ... { ... }"
+snippet rand
+rand ${1:type} ${2:name};
+
+constraint $2_cst {
+	// define constraint here using dist, inside, = etc
+	${3}
+};
+endsnippet
+snippet randcase "randcase .."
+	${1:weight1}:
+		${3}
+	${2:weight2}:
+endcase
+endsnippet
+snippet constraint  "class member: constraint"
+constraint ${1:constraint_name} {
+	${2:ConstraintBlockItem}
+	${0}
+}
+endsnippet
+
+snippet ConstraintBlockItem "Constraint block item [expr|solv]" b 
+// solv: solve dir before addr;
+// expr: addr[1:0] == 0;
+// expr: var dist	{var_val := 20, [var_min:var_max] /= 80}; 
+// expr: (addr <= 16'h8000) -> (dir == dir_rd);
+// expr: if (addr < 0x100) dir == dir_rd; else dir == dir_wr;
+// expr: foreach (myqueue [item]) dir == dir_rd;
+endsnippet 
+
+snippet randomize "std::randomize"
+${1:myclass.randomize() ${2:with}}
+${3:std::randomize(addr,dir) ${4:with}}
+${0}
+endsnippet
+
+snippet with  "with ... randomize"
+with {
+	${2:ConstraintBlockItem}
+	${0}
+};
+endsnippet
+snippet repeat  "repeat N times"
+repeat(${1:N}) begin
+	$0
+end
+endsnippet
+snippet forever  "forever"
+forever begin
+	$0
+end
+endsnippet
+snippet module  "module .. endmodule" b
+module ${1:module_name} ();
+	$0
+endmodule: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet interface  "interface .. endinterface" b
+interface ${1:interface_name} ();
+	$0
+endinterface: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet package  "package .. endpackage" b
+package ${1:package_name};
+	$0
+endpackage: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet class "class .. endclass" b
+class ${1:class_name};
+	$0
+endclass: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet function  "function .. endfunction" b
+function ${2:return_type} ${1:function_name} ();
+	$0
+endfunction: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet task  "task .. endtask"
+task ${1:task_name} ();
+	$0
+endtask: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet clocking "clocking .. endclocking" b 
+clocking ${1:cb_name} @(${2:trigger});
+	$0
+endclocking: ${1/(\w+).*/$1/}
+endsnippet 
+
+snippet program  "program .. endprogram" b
+program ${1:program_name};
+	$0
+endprogram: ${1/(\w+).*/$1/}
+endsnippet 
+
+################################################################################
+# UVM Snippets
+################################################################################
+snippet uvm_object "Generic UVM Object Class for config object"
+class ${1:name}_object extends uvm_object;
+	\`uvm_object_utils($1_object)
+
+	uvm_object_constructor${2}
+endclass: $1_object
+endsnippet
+
+snippet uvm_object "uvm_transaction"
+class ${1:name}_transaction extends uvm_sequence_item;
+	\`uvm_object_utils($1_transaction)
+
+	uvm_object_constructor${2}
+
+endclass: $1_transaction
+endsnippet
+
+snippet uvm_object "uvm_sequence: UVM Transaction class type"
+class ${1:name}_sequence extends uvm_sequence #(${2:<transaction_type>});
+	\`uvm_object_utils($1_sequence)
+
+	uvm_object_constructor${3}
+
+	uvm_body_task${4}
+
+endclass: $1_sequence
+endsnippet
+
+snippet uvm_component "uvm_test: uvm test class type"
+class ${1:name}_test extends uvm_test;
+	\`uvm_component_utils($1_test)
+
+	uvm_component_constructor${2}
+
+endclass: $1_test
+endsnippet
+
+snippet uvm_component "uvm_env: uvm env class type"
+class ${1:name}_env extends uvm_env;
+	\`uvm_component_utils($1_env)
+
+	uvm_component_constructor${2}
+
+endclass: $1_env
+endsnippet
+
+snippet uvm_component "uvm_sequencer: uvm sequencer class type"
+class ${1:name}_sequencer extends uvm_sequencer #(${2:<transaction_type>});
+	\`uvm_component_utils($1_sequencer)
+
+	uvm_component_constructor${3}
+
+endclass : $1_sequencer
+endsnippet
+
+snippet uvm_component "uvm_driver: uvm driver class type"
+class ${1:name}_driver extends uvm_driver #(${2:<transaction_type>});
+	\`uvm_component_utils($1_driver)
+
+	uvm_component_constructor${3}
+
+endclass: $1_driver
+endsnippet
+
+snippet uvm_component "uvm_monitor: uvm monitor class type"
+class ${1:name}_monitor extends uvm_monitor #(${2:<transaction_type>});
+	\`uvm_component_utils($1_monitor)
+
+	uvm_component_constructor${3}
+
+endclass: $1_monitor
+endsnippet
+
+snippet uvm_phase "function: build_phase Function"
+function void build_phase (uvm_phase phase);
+	uvm_create${1}
+endfunction: build_phase
+endsnippet
+
+snippet uvm_phase "function: connect_phase Function"
+function void connect_phase (uvm_phase phase);
+	uvm_connect${1}
+endfunction: connect_phase
+endsnippet
+
+snippet uvm_phase "function: start_of_simulation Function"
+function void start_of_simulation (uvm_phase phase);
+	${1:<open files|print topology>}
+endfunction: start_of_simulation
+endsnippet
+
+snippet uvm_phase "task: run_phase Task"
+task run_phase (uvm_phase phase);
+
+endtask: run_phase
+endsnippet
+
+snippet uvm_phase "function: (post run task) check_phase Function"
+function void check_phase (uvm_phase phase);
+	${1:<gather simulation information>}
+endfunction: check_phase
+endsnippet
+
+snippet uvm_phase "function: (post run task) report_phase Function"
+function void report_phase (uvm_phase phase);
+	${1:<gather simulation information>}
+endfunction: report_phase
+endsnippet
+
+snippet uvm_body_task "uvm_sequence:: Body task"
+task pre_body();
+	uvm_do
+endtask : pre_body
+endsnippet
+
+snippet uvm_body_task "uvm_sequence:: Body task"
+task body();
+	uvm_do
+endtask : body
+endsnippet
+
+snippet uvm_body_task "uvm_sequence:: Body task"
+task post_body();
+	uvm_do
+endtask : post_body
+endsnippet
+
+snippet uvm_package "Top level package for UVM classes"
+package ${1:<Package Name>};
+	timeunit 1ns;
+	timeprecision 1ps;
+	\`include "uvm_macros.svh"
+	import uvm_pkg::*;
+	\`include "${2:<file1.sv>}"
+	\`include "${3:<file2.sv>}"
+endpackage: $1
+endsnippet
+snippet uvm_top "instantiate in top level module aka testbench"
+\`include "uvm_macros.svh"
+
+module ${1:testbench};
+
+	timeunit 1ns;
+	timeprecision 1ns;
+	
+	import uvm_pkg::*;
+	import ex01_pkg::*;
+
+${1:name}_dut_interface $1_dif();
+
+initial begin
+	uvm_config_db #(virtual $1_dut_interface)::set(null, "*", "$1_dut_interface", $1_dif);
+	uvm_top.enable_print_topology = 1;
+	uvm_top.finish_on_completion = 0;
+	uvm_top.set_timeout(1ms);
+	uvm_top.run_test("test1");
+end
+endmodule: ${1/(\w+).*/$1/}
+endsnippet
+
+snippet uvm_do "sequences::body::uvm_do Details for item or sequence"
+\`uvm_create(req)
+assert(req.randomize() with {req.property == 1;});
+\`uvm_send(req)
+endsnippet
+
+snippet uvm_do "sequences::body::uvm_rand_send_with Details for item or sequence"
+\`uvm_create(req)
+\`uvm_rand_send_with(req,{req.property == 1;})
+endsnippet
+
+snippet uvm_do "sequences::body::uvm_do_with for item or sequence"
+\`uvm_do_with(req,{req.property == 1;})
+endsnippet
+
+snippet uvm_do "sequences::body::uvm_do macro for item or sequence"
+\`uvm_do(req)
+endsnippet
+
+snippet uvm_objection "objection: Raise objection"
+phase.raise_objection(this);
+endsnippet
+
+snippet uvm_objection "objection: Raise objection"
+phase.drop_objection(this);
+endsnippet
+
+snippet uvm_port "put_port; TLM put port"
+uvm_blocking_put_port #(${1:<transaction_obj>}) put_port;
+endsnippet
+
+snippet uvm_port "put_export: TLM put export"
+uvm_blocking_put_export #(${1:<transaction_obj>}) put_export;
+endsnippet
+
+snippet uvm_port "imp_port: TLM put imp"
+uvm_blocking_put_imp #(${1:<transaction_obj>}, ${2:<parent_object_type>}) put_imp;
+endsnippet
+
+snippet uvm_port "analysis_port: TLM analysis port"
+uvm_analysis_port #(${1:<transaction_obj>}) analysis_port_h;
+endsnippet
+
+snippet uvm_connect "tlm connect"
+${1:<initiator_h>}.seq_item_port.connect(${2:<responder_h>}.seq_item_export);
+endsnippet
+
+snippet uvm_new "new system verilog object"
+${1:<obj_handle>} = new();
+endsnippet
+
+snippet uvm_create "factory new object"
+${1:<obj_handle>} = ${2:<obj_type>}::type_id::create("$1");
+endsnippet
+
+snippet uvm_create "factory new component"
+${1:<obj_handle>} = ${2:<obj_type>}::type_id::create("$1", this);
+endsnippet
+
+snippet uvm_config_db "Set: uvm_config_db::set"
+uvm_config_db #(${3:<obj_type>})::set(this, "*", "${1:<obj_name>}", ${2:<obj_value>});
+endsnippet
+
+snippet uvm_config_db "Get: uvm_config_db::get"
+uvm_config_db #(${3:<obj_type>})::get(this, "", "${1:<obj_name>}", ${2:<obj_value>});
+endsnippet
+
+snippet uvm_display
+\`uvm_info(get_type_name(), "${1:<Display Content>}", ${2:<UVM_LOW | UVM_MEDIUM | UVM_HIGH>})
+endsnippet
+
+snippet uvm_error
+\`uvm_error("${1:<TYPE ID>}", "${2:<Display Content>}")
+endsnippet
+
+snippet uvm_object_constructor "boiler plate code for object constructor"
+function new (string name = "");
+	super.new(name);
+endfunction
+endsnippet
+
+snippet uvm_component_constructor "boiler plate code for component constructor"
+function new (string name, uvm_component parent);
+	super.new(name, parent);
+endfunction
+endsnippet
+################################################################################
+# SV Utilities
+################################################################################
+snippet todo "Todo Searchstring" b
+// MyTODO: [`echo ${USER}`]: ${1:description} `!v strftime("%c")`
+endsnippet
+
+snippet title
+//=============================================================================
+// SystemVerilog HDL
+// Created: `date`
+// Author: `echo $USER`
+//									 
+// Note:
+//
+// Description: ${2:<Description>}
+//
+//=============================================================================
+endsnippet
+snippet subtitle
+//=============================================================================
+Note: ${1:<Note>}
+//=============================================================================
+endsnippet

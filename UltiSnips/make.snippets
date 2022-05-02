@@ -1,0 +1,180 @@
+snippet title
+#==============================================================================
+# Makefile
+# Created: `date`                                                               
+# Author: `echo $USER`                                                          
+#
+# Note:                                                                         
+#
+# Makefile Functions:                                                                               
+# {{{$(subst from,to,<text>)
+# $(patsubst pattern,replacement,<text>)
+# $(strip string)
+# $(findstring <string>,<text>)
+# $(filter pattern,<text>)
+# $(filter-out pattern,<text>)
+# $(sort <list>)
+# $(word n,<text>)
+# $(wordlist <starting_word>,<ending_word>,<text>)
+# $(words <text>)
+# $(firstword <words>)
+# $(lastword <words>)
+# }}}
+# Conditional Makefile
+# ifdef VAR          --else --endif
+# ifeq ($(VAR), val) --else --endif
+#
+# Description: ${2:<Description>}                                               
+#==============================================================================
+endsnippet
+
+snippet cat
+phony          - Phony Syntax
+if             - ifeq .. else .. endif
+help           - Creates a multiline help target
+include        - Include external make file
+
+Single Lines
+subst          - Text Substitution
+patsubst       - Pattern Substitution
+strip          
+findstring
+filter         - Filter In
+filter-out     - Filter Out
+sort           - Lexical sort
+dir            - Dir portion
+notdir         - Not Dir Portion (filename)
+suffix         - File suffix (.c)
+basename       - File name (no suffix)
+addsuffix      - Add suffix (.c)
+addprefix      - Add dir portion
+join           - Concatenates two arguments
+word           - selects n'th word
+wordlist       - selects between s'th to e'th
+words          - Number of words in text
+firstword      - Firstword in list
+wildcard       - Pattern glob matching files
+foreach
+call
+origin
+shell
+error
+warning
+endsnippet
+
+snippet phony  "# Phony Syntax"
+.PHONY: clean
+endsnippet
+snippet ifeq "ifeq .. else .. endif"
+ifeq ($(${1:VARIABLE}),0)
+else
+endif
+endsnippet
+snippet var "Multi line variable"
+${1:VARIABLE} = \
+	${2:value} \
+
+endsnippet
+
+snippet irun "UVM Cadence Irun defaults"
+irun:
+	irun -uvm -disable_sem2009 +UVM_NO_RELNOTES \
+	${1:files.sv} \
+endsnippet
+	
+snippet help "Create a multiline echo target"
+define ${1:target}
++-------------------------------------------------------------------------------+
+| ${2:<Help Content Here>}                                                           |
++-------------------------------------------------------------------------------+
+endef
+export $1
+
+$1:
+	@echo "\$\$$1"
+endsnippet
+snippet include "Include external file"
+-include ${1:${HOME}/somefile.mk>}
+endsnippet
+# Single Line make shell
+snippet if "shell if"
+$(if ${1:condition},${2:then}[,${3:else}])
+endsnippet
+snippet subst "# Text Substitution"
+$(subst ${1:from},${2:to},${3:text})
+endsnippet
+snippet patsubst "# Pattern Substitution"
+$(patsubst %${1:suffix},%${2:replacement},$(${3:var})) # $(var:suffix=replacement)
+endsnippet
+snippet echo 
+@echo ${1:Type here}
+endsnippet
+snippet strip
+$(strip ${1:string})
+endsnippet
+snippet findstring
+$(findstring ${1:find},${2:in})
+endsnippet
+snippet filter "# Filter In"
+$(filter ${1:pattern},${2:text})
+endsnippet
+snippet filter-out "# Filter Out"
+$(filter-out ${1:pattern},${2:text})
+endsnippet
+snippet sort "# Lexical sort"
+$(sort ${1:list})
+endsnippet
+snippet dir "# Dir portion"
+$(dir ${1:names})
+endsnippet
+snippet notdir "# Not Dir Portion (filename)"
+$(notdir ${1:names})
+endsnippet
+snippet suffix "# File suffix (.c)"
+$(suffix ${1:names})
+endsnippet
+snippet basename "# File name (no suffix)"
+$(basename ${1:names})
+endsnippet
+snippet addsuffix "# Add suffix (.c)"
+$(addsuffix ${1:suffix},${1:names})
+endsnippet
+snippet addprefix "# Add dir portion"
+$(addprefix ${1:prefix},${1:names})
+endsnippet
+snippet join "# Concatenates two arguments"
+$(join ${1:list1},${2:list2})
+endsnippet
+snippet word "# selects n'th word"
+$(word ${1:n},${2:text})
+endsnippet
+snippet wordlist "# selects between s'th to e'th"
+$(wordlist ${1:s},${2:e},${3:text})
+endsnippet
+snippet words "# Number of words in text"
+$(words ${1:text})
+endsnippet
+snippet firstword "# Firstword in list"
+$(firstword ${1:names})
+endsnippet
+snippet wildcard "# Pattern glob matching files"
+$(wildcard ${1:pattern})
+endsnippet
+snippet foreach
+$(foreach ${1:var},${2:list},${3:text})
+endsnippet
+snippet call
+$(call ${1:variable},${2:param},${3:param},...)
+endsnippet
+snippet origin
+$(origin ${1:variable}) # undefined, default, environment...
+endsnippet
+snippet shell
+$(shell cat foo) # \n converted to " "
+endsnippet
+snippet error
+$(error text...)
+endsnippet
+snippet warning
+$(warning text...)
+endsnippet

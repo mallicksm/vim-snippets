@@ -1,0 +1,40 @@
+snippet title
+;==============================================================================
+; Armlink Scat file                                                                 
+; Created: `date`                                                               
+; Author: `echo $USER`                                                          
+;                                                                               
+; Note:                                                                         
+;                                                                               
+; LR_ROM 0x800
+; {
+;    ER_ROM 0x800
+;    {
+;       program1.o (section, +RO)
+;    }
+; }
+;
+; Section Attr
+; FIRST, LAST
+; RO, RW, ZI
+; ENTRY
+;
+; Description: ${2:<Description>}                                               
+;==============================================================================
+endsnippet
+
+snippet load "Load Region"
+${1:<Load_Region_Name>} ${2:<base_address>}
+{
+}
+endsnippet
+
+snippet exec "Execute Region"
+${1:<Exec_Region_Name>} ${2:<base_address>}
+{
+}
+endsnippet
+
+snippet section "Input Section description"
+${1:<Module_name>} (${2:<section>}, +${3:<attr>})
+endsnippet

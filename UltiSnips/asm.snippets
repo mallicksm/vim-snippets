@@ -1,0 +1,131 @@
+snippet title
+//=============================================================================
+# ARM GNU Assembly Language (AARCH64)
+# Created: `date`
+# Author: `echo $USER`
+#                            
+# Note:
+# Example:
+# .text                  ;# same as (.section .text, "x")
+#
+# .global reset_entry    ;# Mandatory global entry symbol
+# reset_entry:           ;#
+#    add r0, r0, r1
+#
+# Structure:
+# [<label>:] [<instruction or directive>]
+#
+# Additional Syntax:
+#    .extern <symbol>
+#    .balign <power_of_2>
+#    .include "<filename>"
+#    .set <symbol_name> <value>
+#    .byte <byte> {<byte>} ...
+#    .hword <short> {<short>} ...
+#    .word <word> {<word>} ...
+#    .ascii "<string>"
+#
+# Register:
+#   X0  - X7:   arguments & result
+#   X19 - X28:  callee-saved registers
+#   X29:        
+#   X30:        
+#   X31:        
+#   fp .req x29    ;# frame pointer
+#   lr .req x30    ;# link register
+#   sp .req x31    ;# stack pointer "SP" (or 0 value)
+#   
+# Macro:
+#   .macro @MacroName arg_a=val_a, arg_b=val_b
+#   \arg_a:
+#   .endm
+#
+# Mnemonics:
+# add[s] x0,x1,<x2|#n>   -load r0 with r1+r2|n, <s> sets CC
+# adr[p] x0,label        -load r0 with the address label or its page (by pc+const calculation)
+# cmp x0,<x1|#n>         -compare register r0 with register r1. The comparison sets flags.
+# b.<eq|ne|lt|gt> label  -branch to label if equal|not-equal|less-than|greater-than
+# <ldr|str> x0,[x1,#n]   -load register r0 from the address pointed to by (r1 + (n * size)).
+#              [x1,#n]!  -pre-index update
+#              [x1],#n   -post-index
+#             =label     -literal pool
+# mov x0,<x1|#n>         -move data from r1 to r0
+# str x0,<x1,#n>         -store register r0 to address pointed to by (r1 + (n * size)).
+#
+# Description: ${2:<Description>}
+#
+//=============================================================================
+endsnippet
+
+snippet .if ".if <logical_expression>|.ifdef <symbol>|.ifndef <symbol>"
+.if ${1:<logical_expression>|.ifdef <symbol>|.ifndef <symbol>}
+.else
+.endif
+endsnippet
+
+snippet if ".if <logical_expression>|.ifdef <symbol>|.ifndef <symbol>"
+.if ${1:<logical_expression>|.ifdef <symbol>|.ifndef <symbol>}
+.else
+.endif
+endsnippet
+
+snippet .macro "Macro structure"
+.macro ${1:<macro_name>} ${2:<arg1=default_arg1>, <arg2=default_arg2>}
+\\${3:<arg1_ref>}
+.endm
+endsnippet
+
+snippet macro "Macro structure"
+.macro ${1:<macro_name>} ${2:<arg1=default_arg1>, <arg2=default_arg2>}
+\\${3:<arg1_ref>}
+.endm
+endsnippet
+
+snippet set ".set <symbol_name> <value>"
+.set ${1:<symbol_name>} ${2:<value>}
+endsnippet
+
+snippet .set ".set <symbol_name> <value>"
+.set ${1:<symbol_name>} ${2:<value>}
+endsnippet
+
+snippet equ ".set <symbol_name> <value>"
+.set ${1:<symbol_name>} ${2:<value>}
+endsnippet
+
+snippet .equ ".set <symbol_name> <value>"
+.set ${1:<symbol_name>} ${2:<value>}
+endsnippet
+
+snippet include ".include <filename>"
+.include "${1:filename}"
+endsnippet
+
+snippet .include ".include <filename>"
+.include "${1:filename}"
+endsnippet
+
+snippet section ".section <.text|.data|.bss>"
+.section ${1:<.text|.data|.bss>}, "${2:<flags[a|w|x]>}"
+endsnippet
+
+snippet .section ".section <.text|.data|.bss>"
+.section ${1:<.text|.data|.bss>}, "${2:<flags[a|w|x]>}"
+endsnippet
+
+snippet global ".global <symbol>"
+.global ${1:<symbol>}
+endsnippet
+
+snippet .global ".global <symbol>"
+.global ${1:<symbol>}
+endsnippet
+
+snippet globl ".global <symbol>"
+.global ${1:<symbol>}
+endsnippet
+
+snippet .globl ".global <symbol>"
+.global ${1:<symbol>}
+endsnippet
+

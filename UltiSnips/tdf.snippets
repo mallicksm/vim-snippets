@@ -1,0 +1,110 @@
+snippet title "File Header Block" b
+//==============================================================================	
+// State Description Language
+// Created: `date`
+// Author: `echo $USER`
+//
+// Note:
+// P/N - Positive/Negative edge.
+// L/H - Value is stable (0/1 +2cycle)
+// T/S - Transition/Stable (+ve/-ve or +2cycle)
+// X   - Don’t care; any value is accepted as a match.
+// transition() - Detect any value transition
+// sdl Debug: sdl -traceDump -location trace.txt
+//
+// INSTANCE inst1;
+// 
+// STATE s0 {
+// 	IF (sig1) {
+// 		DISPLAY("sig1 = %h", sig1);
+// 	}
+// 	IF(sig2) {
+// 		LOAD COUNTER1 100;
+// 	} ELSE {
+// 		GOTO s1;
+// 	}
+// }
+// 
+// STATE s1 {
+// 	IF (COUNTER1 <= 0) {
+// 		t1: TRIGGER;
+// 	}
+// 	DECR COUNTER1
+// 	GOTO s0;
+// }
+// 
+// Description: $1
+//==============================================================================	
+endsnippet
+
+snippet comment "Single Line Comment" b
+//==============================================================================	
+//#${1}
+//==============================================================================	
+endsnippet
+
+snippet instance "TDF Instance"
+INSTANCE inst1;
+endsnippet
+
+snippet state "TDF State"
+STATE s0 {
+	${1}
+}
+endsnippet
+
+snippet if "if-else-if-else"
+IF (${1:<expr>}) {
+	${2}
+} ELSE IF (${3:<expr>}) {
+	${4}
+} ELSE {
+	${5}
+}
+endsnippet
+
+snippet if "if-else"
+IF (${1:<expr>}) {
+	${2}
+} ELSE {
+	${3}
+}
+endsnippet
+
+snippet if "if"
+IF (${1:<expr>}) {
+	${2}
+}
+endsnippet
+
+snippet define "tick define name to a string"
+\`define ${1:<name>} ${1:<string>} 
+endsnippet
+
+snippet include "tick include file"
+\`include "${1:global.tdf}"
+endsnippet
+
+snippet if "tick if-else"
+\`if ${1:<value>}
+$2
+\`else
+$3
+\`endif
+endsnippet
+
+snippet ifdef "Ifdef and all its variances"
+\`ifdef ${1:<name>}
+$2
+\`else
+$3
+\`endif
+endsnippet
+
+snippet trigger "TRIGGER Statement" b 
+TRIGGER = ${1:<signal-name>}; 
+endsnippet 
+
+snippet display "display statement like verilog" b 
+DISPLAY("${1:<text %t %h>}", ${2:<signal-name>}); 
+endsnippet 

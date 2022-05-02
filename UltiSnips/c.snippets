@@ -1,0 +1,144 @@
+snippet title
+//=============================================================================
+// C Programming Language
+// Created: `date`
+// Author: `echo $USER`
+//                            
+// Note:
+//
+// Description: ${2:<Description>}
+//
+//=============================================================================
+endsnippet
+
+snippet attribute
+__attribute__((section("${1:Section Name}")))
+endsnippet
+snippet main "# Main with arguments"
+int main(int argc, const char *argv[]) 
+{
+	${1}
+	return(0);
+}
+endsnippet
+snippet main "# Main with no arguments"
+int main(void) 
+{
+	${1}
+	return(0);
+}
+endsnippet
+snippet return "Return function"
+return(${1:rc});
+endsnippet
+snippet include "#include <...>"
+#include <${1:stdio}.h>${2}
+endsnippet
+snippet ifdef "#ifndef ... #define ... #endif"
+#ifndef $1
+#define ${1:SYMBOL} ${2:value}
+#endif${3}
+endsnippet
+snippet ifdef "# Solo #Ifdef"
+#ifdef ${1:FOO}
+	${2:#define }
+#endif
+endsnippet
+snippet define
+#define
+endsnippet
+snippet if "compile time #if"
+#if ${1:FOO}
+	${2}
+#endif
+endsnippet
+snippet once "Include header once only guard"
+#ifndef _${1:`!p
+import string
+snip.rv = re.sub(r'[^A-Za-z0-9]+','_', path).upper()`}_
+#define _$1_
+
+${VISUAL}${0}
+
+#endif /* _$1_ */
+
+endsnippet
+snippet if "If Condition"
+if (${1:<condition>}) 
+{
+	${2:<if-part>}
+}
+endsnippet
+snippet if "If-else Condition"
+if (${1:<condition>}) 
+{
+	${2:<if-part>}
+}
+else 
+{
+	${3:<else-part>}
+}
+endsnippet
+snippet if "?: conditional"
+${1:<condition>} ? ${2:a} : ${3:b}
+endsnippet
+snippet do "Do While Loop"
+do 
+{
+	${2:<code>}
+} while (${1:<condition>});
+endsnippet
+snippet while "While Loop"
+while (${1:<condition>}) 
+{
+	${2:<code>}
+}
+endsnippet
+snippet for "For Loop"
+for (${2:i} = 0; $2 < ${1:count}; $2${3:++}) 
+{
+	${4:<code>}
+}
+endsnippet
+snippet for "Custom For Loop"
+for (${1:i} = ${2:0}; ${3:$1 < 10}; $1${4:++}) 
+{
+	${5:<code>}
+}
+endsnippet
+snippet function "Function"
+${1:void} ${2:function_name}(${3}) 
+{
+	${4:<code>}
+}
+endsnippet
+snippet struct "Struct"
+struct ${1:<struct-type>} 
+{
+	${2:<data>}
+}${3: <optional variable list>};${4}
+endsnippet
+snippet typedef "# Typedef simple"
+typedef ${1:int} ${2:MyCustomType};${3}
+endsnippet
+snippet typedef "# Typedef struct"
+typedef struct ${2:_$1 }
+{
+	${3:<data>}
+} ${1:<typedef-type>};
+endsnippet
+snippet typedef "# Typdef enum"
+typedef enum 
+{
+	${1:<data>}
+} ${2:foo};
+endsnippet
+snippet printf "printf"
+printf("${1:%s}\n"${2});${3}
+endsnippet
+snippet fprintf "fprintf (again, this isn't as nice as TextMate's version, but it works)"
+fprintf(${1:stderr}, "${2:%s}\n"${3});${4}
+endsnippet
+snippet . "This is kind of convenient"
+[${1}]${2}
+endsnippet
